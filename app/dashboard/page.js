@@ -3,36 +3,56 @@ import { useAuth } from "@/context/Authcontext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "../loading";
-
-const videos = [
-  {
-    title: "The Future of Artificial Intelligence",
-    channel: "TechVision",
-    time: "2 hours ago",
-    duration: "18:42",
-    gradient: "from-violet-500 to-indigo-600",
-  },
-  {
-    title: "How Great Founders Think",
-    channel: "Startup School",
-    time: "Yesterday",
-    duration: "42:15",
-    gradient: "from-orange-400 to-rose-600",
-  },
-  {
-    title: "React Server Components Explained",
-    channel: "Code with Alex",
-    time: "3 days ago",
-    duration: "27:08",
-    gradient: "from-cyan-400 to-blue-600",
-  },
-];
+import api from "@/axios/api";
+import Link from "next/link";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function DashboardPage() {
   const [url, setUrl] = useState("");
   const { user, loading } = useAuth();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
+  // get all videos from server.
+  const {
+    data: videos = [],
+    isLoading: videosLoading,
+    error: videosQueryError,
+  } = useQuery({
+    queryKey: ["videos"],
+    queryFn: async () => {
+      const res = await api.get("/video/videos");
+
+      if (!res?.data || !Array.isArray(res.data)) {
+        throw new Error("Invalid videos response");
+      }
+
+      return res.data;
+    },
+    enabled: !loading && !!user,
+  });
+
+  const videosError = videosQueryError
+    ? videosQueryError?.response?.data?.message ||
+      videosQueryError.message ||
+      "Unable to load your videos. Please try again."
+    : "";
+
+  
+  // save video url 
+  const saveVideoMutation = useMutation({
+    mutationFn: async (videoUrl) => {
+      const res = await api.post("/video/url", { url: videoUrl });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["videos"] });
+      setUrl("");
+    },
+  });
+
+
+  // check for user exists in authContext
   useEffect(() => {
     if (!loading && !user) {
       router.replace("/signin");
@@ -49,9 +69,15 @@ export default function DashboardPage() {
     return null;
   }
 
+  // handle form submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    saveVideoMutation.mutate(url);
+  };
+
   return (
     <main className="min-h-screen bg-[#08090d] text-slate-100">
-      <div className="mx-auto flex max-w-[1440px]">
+      <div className="mx-auto flex max-w-360">
         <section className="w-full px-5 py-6 sm:px-8 lg:px-12 lg:py-8">
           <div className="mx-auto max-w-4xl">
             <div className="mb-12 text-center">
@@ -61,7 +87,7 @@ export default function DashboardPage() {
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
                 Understand any video.
                 <br />
-                <span className="bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-white to-slate-500 bg-clip-text text-transparent">
                   Just ask.
                 </span>
               </h1>
@@ -70,23 +96,39 @@ export default function DashboardPage() {
                 Get answers, summaries, and insights in seconds.
               </p>
             </div>
+
             <form
-              onSubmit={(e) => e.preventDefault()}
-              className="rounded-2xl border border-white/[.1] bg-[#11131a] p-2 shadow-2xl shadow-black/30 focus-within:border-red-500/50"
+              onSubmit={handleSubmit}
+              className="rounded-2xl border border-white/10 bg-[#11131a] p-2 shadow-2xl shadow-black/30 focus-within:border-red-500/50"
             >
               <div className="flex items-center gap-3">
                 <span className="pl-3 text-xl text-slate-500">⌕</span>
                 <input
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
+                  required
                   placeholder="Paste a YouTube video URL..."
                   className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-slate-600"
                 />
-                <button className="rounded-xl bg-red-500 px-5 py-3 text-sm font-semibold hover:bg-red-400">
-                  Start chatting →
+                <button
+                  type="submit"
+                  disabled={saveVideoMutation.isPending}
+                  className="rounded-xl bg-red-500 px-5 py-3 text-sm font-semibold hover:bg-red-400"
+                >
+                  {saveVideoMutation.isPending
+                    ? "Saving..."
+                    : "Start chatting →"}
                 </button>
               </div>
             </form>
+
+            {saveVideoMutation.isError && (
+              <p className="mt-3 text-center text-sm text-red-400">
+                {saveVideoMutation.error?.response?.data?.message ||
+                  "Unable to save this video. Please try again."}
+              </p>
+            )}
+
             <div className="mt-4 flex justify-center gap-4 text-xs text-slate-500">
               <span>✦ AI-powered answers</span>
               <span>•</span>
@@ -105,35 +147,56 @@ export default function DashboardPage() {
                 View all →
               </button>
             </div>
-            <div className="mt-5 grid gap-4 md:grid-cols-3">
-              {videos.map((video) => (
-                <article
-                  key={video.title}
-                  className="group cursor-pointer rounded-2xl border border-white/[.07] bg-[#101117] p-3 hover:-translate-y-1 hover:border-white/20"
-                >
-                  <div
-                    className={`relative flex h-32 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br ${video.gradient}`}
-                  >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-black/40">
-                      ▶
-                    </span>
-                    <span className="absolute bottom-2 right-2 rounded bg-black/70 px-1.5 py-0.5 text-[10px]">
-                      {video.duration}
-                    </span>
-                  </div>
-                  <div className="px-1 pt-3">
-                    <h3 className="truncate text-sm font-semibold">
-                      {video.title}
-                    </h3>
-                    <p className="mt-1 text-xs text-slate-500">
-                      {video.channel} · {video.time}
-                    </p>
-                  </div>
-                </article>
-              ))}
+
+            <div className="mt-6">
+              {videosLoading ? (
+                <p className="text-sm text-slate-500">Loading videos...</p>
+              ) : videosError ? (
+                <p className="text-sm text-red-400">{videosError}</p>
+              ) : videos.length === 0 ? (
+                <p className="text-sm text-slate-500">No videos yet.</p>
+              ) : (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {videos.map((video) => {
+                    const videoUrl = video.video_link;
+                    const videoID = `/chat/${video.id}`;
+                    const videoTitle = video.title || "Untitled video";
+
+                    return (
+                      <Link
+                        key={video.id}
+                        href={videoID}
+                        className="group overflow-hidden rounded-xl border border-white/8 bg-[#11131a] transition hover:border-red-500/50"
+                      >
+                        <div className="relative aspect-video overflow-hidden bg-linear-to-br from-red-950 via-slate-800 to-indigo-950">
+                          <div className="absolute -right-8 -top-10 h-32 w-32 rounded-full bg-red-500/20 blur-2xl" />
+                          <div className="absolute -bottom-12 -left-6 h-28 w-40 rotate-12 rounded-full bg-indigo-400/20 blur-xl" />
+                          <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_35%,rgba(255,255,255,0.08)_35%,rgba(255,255,255,0.08)_65%,transparent_65%)]" />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-lg text-red-600 shadow-lg transition group-hover:scale-110">
+                              ▶
+                            </span>
+                          </div>
+                          <span className="absolute bottom-3 left-3 rounded bg-black/60 px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-white/80">
+                            YouTube video
+                          </span>
+                        </div>
+                        <div className="p-4">
+                          <h3 className="truncate text-sm font-semibold text-slate-100">
+                            {videoTitle}
+                          </h3>
+                          <p className="mt-1 truncate text-xs text-slate-500">
+                            {videoUrl}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
-          <footer className="mx-auto mt-20 max-w-4xl border-t border-white/[.06] pt-5 text-center text-xs text-slate-600">
+          <footer className="mx-auto mt-20 max-w-4xl border-t border-white/6 pt-5 text-center text-xs text-slate-600">
             videogpt uses AI to help you learn faster. Always verify important
             information.
           </footer>

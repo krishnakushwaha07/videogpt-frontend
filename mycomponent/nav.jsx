@@ -77,28 +77,28 @@ const Navbar = () => {
       {menuOpen && (
         <div className="mx-auto mt-3 flex max-w-7xl flex-col gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-2 text-sm text-slate-300 md:hidden">
           <Link
-            to="/dashboard"
+            href="/dashboard"
             onClick={() => setMenuOpen(false)}
             className="rounded-lg px-4 py-3 hover:bg-white/10 hover:text-white"
           >
             Dashboard
           </Link>
           <Link
-            to="#features"
+            href="#features"
             onClick={() => setMenuOpen(false)}
             className="rounded-lg px-4 py-3 hover:bg-white/10 hover:text-white"
           >
             Features
           </Link>
           <Link
-            to="#how-it-works"
+            href="#how-it-works"
             onClick={() => setMenuOpen(false)}
             className="rounded-lg px-4 py-3 hover:bg-white/10 hover:text-white"
           >
             How it works
           </Link>
           <Link
-            to="#about"
+            href="#about"
             onClick={() => setMenuOpen(false)}
             className="rounded-lg px-4 py-3 hover:bg-white/10 hover:text-white"
           >
