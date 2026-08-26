@@ -20,8 +20,6 @@ export default function ChatPage() {
       return response.data;
     },
     onSuccess: (data) => {
-      console.log(data);
-
       setMessages((currentMessages) => [
         ...currentMessages,
         {
@@ -57,55 +55,20 @@ export default function ChatPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_right,_rgba(127,29,29,0.2),_transparent_35%),#020617] font-sans text-slate-100">
-      <div className="mx-auto grid max-w-6xl gap-6 px-5 py-7 md:grid-cols-[280px_1fr] md:px-10">
-        <aside className="rounded-2xl border border-white/10 bg-slate-900/90 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl">
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-red-400">
-            Video source
-          </p>
-          <div className="aspect-video rounded-xl bg-linear-to-br from-red-950 via-red-800 to-red-500 p-4 text-white shadow-lg shadow-red-950/30">
-            <div className="flex h-full items-center justify-center rounded-lg border border-white/20 bg-black/10">
-              <span className="grid h-12 w-12 place-items-center rounded-full bg-white/20 text-xl shadow-lg ring-1 ring-white/30">
-                ▶
-              </span>
-            </div>
-          </div>
-          <p className="mt-4 truncate text-sm font-bold text-white">
-            Video ID: {videoID}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            Ready to answer your questions
-          </p>
-          <div className="mt-6 border-t border-slate-800 pt-4">
-            <p className="mb-3 text-xs font-bold uppercase tracking-widest text-red-400">
-              Try asking
-            </p>
-            {[
-              "Summarize this video",
-              "What are the key takeaways?",
-              "Explain the main concept",
-            ].map((item, index) => (
-              <p
-                key={index}
-                className="mb-2 w-full rounded-lg border border-transparent bg-slate-800/80 px-3 py-2 text-left text-xs text-slate-300 transition hover:border-red-800/60 hover:bg-gradient-to-r hover:from-red-950 hover:to-slate-800 hover:text-red-200"
-              >
-                {item}
-              </p>
-            ))}
-          </div>
-        </aside>
+    <main className="h-[100dvh] overflow-hidden bg-[radial-gradient(circle_at_top_right,_rgba(127,29,29,0.2),_transparent_35%),#020617] font-sans text-slate-100">
+      <div className="mx-auto flex h-full w-full max-w-5xl flex-col gap-4 px-3 py-3 pb-24 sm:gap-6 sm:px-5 sm:py-6 sm:pb-28 md:px-8 md:pb-28 lg:px-10">
         <section
-          className="flex min-h-[calc(100vh-145px)] flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-900/90 shadow-2xl shadow-black/40 backdrop-blur-xl"
+          className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900/90 shadow-2xl shadow-black/40 backdrop-blur-xl sm:rounded-3xl"
           aria-label="VideoGPT chat"
         >
-          <div className="border-b border-white/10 bg-linear-to-r from-slate-900 via-slate-900 to-red-950/40 px-5 py-5 md:px-8">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-linear-to-br from-red-500 to-red-900 text-xl shadow-lg shadow-red-950/50 ring-1 ring-red-400/30">
+          <div className="border-b border-white/10 bg-linear-to-r from-slate-900 via-slate-900 to-red-950/40 px-4 py-4 sm:px-5 sm:py-5 md:px-8">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-linear-to-br from-red-500 to-red-900 text-lg shadow-lg shadow-red-950/50 ring-1 ring-red-400/30 sm:h-12 sm:w-12 sm:text-xl">
                   ✨
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold tracking-tight">
+                  <h1 className="text-base font-bold tracking-tight sm:text-lg">
                     Chat about your video
                   </h1>
                   <div className="mt-1 flex items-center gap-2 text-xs text-slate-500">
@@ -117,18 +80,18 @@ export default function ChatPage() {
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="rounded-lg border border-slate-700 bg-slate-950/30 px-3 py-2 text-sm text-slate-300 transition hover:border-red-500 hover:bg-red-950/40 hover:text-white"
+                className="shrink-0 rounded-lg border border-slate-700 bg-slate-950/30 px-2.5 py-2 text-xs text-slate-300 transition hover:border-red-500 hover:bg-red-950/40 hover:text-white sm:px-3 sm:text-sm"
               >
                 ← Go back
               </button>
             </div>
           </div>
-          <div className="flex-1 space-y-5 overflow-y-auto bg-[radial-gradient(circle_at_top,_rgba(127,29,29,0.16),_transparent_42%),#020617] p-5 md:p-8">
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain bg-[radial-gradient(circle_at_top,_rgba(127,29,29,0.16),_transparent_42%),#020617] p-4 scrollbar-thin scrollbar-track-slate-950/40 scrollbar-thumb-red-900/80 hover:scrollbar-thumb-red-600 sm:space-y-5 sm:p-5 md:p-8 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-slate-950/40 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-red-900/80 [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-thumb:hover]:bg-red-600">
             <div className="flex items-start gap-3">
               <div className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-red-500/15 text-sm ring-1 ring-red-400/20">
                 ✨
               </div>
-              <div className="max-w-xl rounded-2xl rounded-tl-sm border border-red-400/15 bg-white/6 px-4 py-3 text-sm leading-6 text-slate-200 shadow-xl shadow-black/10">
+              <div className="max-w-[calc(100%-2.75rem)] rounded-2xl rounded-tl-sm border border-red-400/15 bg-white/6 px-4 py-3 text-sm leading-6 text-slate-200 shadow-xl shadow-black/10 sm:max-w-xl">
                 Hi! I’m VideoGPT. Ask me anything about the content, and I’ll
                 help you find the answer.
               </div>
@@ -138,8 +101,8 @@ export default function ChatPage() {
                 key={`${item.role}-${index}`}
                 className={
                   item.role === "user"
-                    ? "ml-auto max-w-xl rounded-2xl rounded-tr-sm bg-linear-to-br from-red-500 to-red-700 px-4 py-3 text-sm leading-6 text-white shadow-xl shadow-red-950/30 ring-1 ring-red-300/20"
-                    : "max-w-xl rounded-2xl rounded-tl-sm border border-red-400/15 bg-white/6 px-4 py-3 text-sm leading-6 text-slate-200 shadow-xl shadow-black/10"
+                    ? "ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-linear-to-br from-red-500 to-red-700 px-4 py-3 text-sm leading-6 text-white shadow-xl shadow-red-950/30 ring-1 ring-red-300/20 sm:max-w-xl"
+                    : "max-w-[85%] rounded-2xl rounded-tl-sm border border-red-400/15 bg-white/6 px-4 py-3 text-sm leading-6 text-slate-200 shadow-xl shadow-black/10 sm:max-w-xl"
                 }
               >
                 {item.content}
@@ -147,41 +110,41 @@ export default function ChatPage() {
             ))}
             <Suspense fallback={null}>
               {chatMutation.isPending && (
-                <div className="max-w-xl rounded-2xl rounded-tl-sm border border-red-400/15 bg-white/6 px-4 py-3 text-sm text-slate-400">
+                <div className="max-w-[85%] rounded-2xl rounded-tl-sm border border-red-400/15 bg-white/6 px-4 py-3 text-sm text-slate-400 sm:max-w-xl">
                   VideoGPT is thinking…
                 </div>
               )}
             </Suspense>
           </div>
-          <form
-            onSubmit={handleAsk}
-            className="border-t border-white/10 bg-slate-900/95 p-4 md:p-5"
-          >
-            <div className="flex items-end gap-2 rounded-2xl border border-white/10 bg-slate-800/80 p-2 shadow-2xl shadow-black/20 transition focus-within:border-red-500/70 focus-within:ring-4 focus-within:ring-red-950/60">
-              <textarea
-                value={message}
-                onChange={(event) => setMessage(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && !event.shiftKey) {
-                    handleAsk(event);
-                  }
-                }}
-                rows="1"
-                placeholder="Ask anything about this video..."
-                className="min-h-11 flex-1 resize-none bg-transparent px-3 py-2.5 text-sm outline-none placeholder:text-slate-500"
-              />
-              <button
-                type="submit"
-                className="rounded-xl bg-linear-to-r from-red-600 to-red-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-950/40 transition hover:-translate-y-0.5 hover:from-red-500 hover:to-red-400 hover:shadow-red-900/50 active:translate-y-0"
-              >
-                Ask
-              </button>
-            </div>
-            <p className="mt-3 text-center text-[11px] text-slate-500">
-              VideoGPT can make mistakes. Check important information.
-            </p>
-          </form>
         </section>
+        <form
+          onSubmit={handleAsk}
+          className="fixed inset-x-0 bottom-0 z-10 sm:px-5 sm:pb-4 md:px-8"
+        >
+          <div className="mx-auto flex w-full max-w-4xl items-end gap-2 rounded-2xl border border-white/10 bg-slate-800/80 p-2 transition focus-within:border-red-500/70 focus-within:ring-4 focus-within:ring-red-950/60">
+            <textarea
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && !event.shiftKey) {
+                  handleAsk(event);
+                }
+              }}
+              rows="1"
+              placeholder="Ask anything about this video..."
+              className="min-h-11 max-h-32 min-w-0 flex-1 resize-none px-2 py-2.5 text-sm outline-none placeholder:text-slate-500 sm:px-3"
+            />
+            <button
+              type="submit"
+              className="shrink-0 rounded-xl bg-linear-to-r from-red-600 to-red-500 px-3 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-950/40 transition hover:-translate-y-0.5 hover:from-red-500 hover:to-red-400 hover:shadow-red-900/50 active:translate-y-0 sm:px-5"
+            >
+              Ask
+            </button>
+          </div>
+          <p className="mt-3 text-center text-[11px] text-slate-500">
+            VideoGPT can make mistakes. Check important information.
+          </p>
+        </form>
       </div>
     </main>
   );

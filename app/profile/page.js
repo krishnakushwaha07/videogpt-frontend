@@ -33,7 +33,13 @@ export default function ProfilePage() {
         <div className="px-6 pb-6 sm:px-8 sm:pb-8">
           <div className="-mt-12 flex items-end justify-between">
             <div className="flex h-24 w-24 items-center justify-center rounded-3xl border-4 border-slate-950 overflow-hidden shadow-lg">
-              <img src={user.profile_link} alt="profile" width={96} height={96} className="h-full w-full object-cover" />
+              <img
+                src={user.profile_link}
+                alt="profile"
+                width={96}
+                height={96}
+                className="h-full w-full object-cover"
+              />
             </div>
             <span className="mb-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300">
               Active
