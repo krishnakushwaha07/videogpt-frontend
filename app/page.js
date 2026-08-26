@@ -5,7 +5,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-slate-950 text-white">
-      <section id="how-it-works" className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 pb-24 pt-16 lg:grid-cols-2 lg:px-8 lg:pb-32 lg:pt-24">
+      <section className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 pb-24 pt-16 lg:grid-cols-2 lg:px-8 lg:pb-32 lg:pt-24">
         <div className="absolute -left-32 top-10 h-80 w-80 rounded-full bg-red-500/20 blur-3xl" />
         <div className="relative z-10">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-red-400/20 bg-red-400/10 px-4 py-2 text-sm text-red-300"><span className="h-2 w-2 rounded-full bg-red-400" /> Ask anything about any video</div>

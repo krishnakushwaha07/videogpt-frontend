@@ -84,21 +84,14 @@ const Navbar = () => {
             Dashboard
           </Link>
           <Link
-            href="#features"
+            href="/#features"
             onClick={() => setMenuOpen(false)}
             className="rounded-lg px-4 py-3 hover:bg-white/10 hover:text-white"
           >
             Features
           </Link>
           <Link
-            href="#how-it-works"
-            onClick={() => setMenuOpen(false)}
-            className="rounded-lg px-4 py-3 hover:bg-white/10 hover:text-white"
-          >
-            How it works
-          </Link>
-          <Link
-            href="#about"
+            href="/#about"
             onClick={() => setMenuOpen(false)}
             className="rounded-lg px-4 py-3 hover:bg-white/10 hover:text-white"
           >
