@@ -4,10 +4,26 @@ import { useAuth } from "@/context/Authcontext";
 import Loading from "../loading";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/axios/api";
 
 export default function ProfilePage() {
   const router = useRouter();
+
   const { logoutUser, loading, user } = useAuth();
+
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    isError: profileError,
+  } = useQuery({
+    queryKey: ["me"],
+    queryFn: async () => {
+      const response = await api.get("/me");
+      return response.data;
+    },
+    enabled: !loading && !!user,
+  });
 
   useEffect(() => {
     if (!loading && !user) {
@@ -16,14 +32,16 @@ export default function ProfilePage() {
   }, [loading, user, router]);
 
   // Still checking localStorage
-  if (loading) {
+  if (loading || profileLoading) {
     return <Loading />;
   }
 
   // Not authenticated
-  if (!user) {
+  if (!user || profileError || !profile) {
     return null;
   }
+
+  
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 text-white">
@@ -34,7 +52,7 @@ export default function ProfilePage() {
           <div className="-mt-12 flex items-end justify-between">
             <div className="flex h-24 w-24 items-center justify-center rounded-3xl border-4 border-slate-950 overflow-hidden shadow-lg">
               <img
-                src={user.profile_link}
+                src={profile.profile_link}
                 alt="profile"
                 width={96}
                 height={96}
@@ -48,9 +66,9 @@ export default function ProfilePage() {
 
           <div className="mt-5">
             <h1 className="mt-1 text-2xl font-semibold tracking-tight">
-              {user.name}
+              {profile.name}
             </h1>
-            <p className="mt-2 text-sm text-slate-400">{user.email}</p>
+            <p className="mt-2 text-sm text-slate-400">{profile.email}</p>
           </div>
 
           <div className="mt-8 border-t border-white/10 pt-6">
