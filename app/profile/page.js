@@ -23,6 +23,8 @@ export default function ProfilePage() {
       return response.data;
     },
     enabled: !loading && !!user,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -32,7 +34,12 @@ export default function ProfilePage() {
   }, [loading, user, router]);
 
   // Still checking localStorage
-  if (loading || profileLoading) {
+  if (loading) {
+    return <Loading />;
+  }
+
+  // waiting till data comes from server
+  if (profileLoading) {
     return <Loading />;
   }
 
@@ -40,8 +47,6 @@ export default function ProfilePage() {
   if (!user || profileError || !profile) {
     return null;
   }
-
-  
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 text-white">
