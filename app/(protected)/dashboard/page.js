@@ -1,16 +1,12 @@
 "use client";
-import { useAuth } from "@/context/Authcontext";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import Loading from "../loading";
+
+import { useState } from "react";
 import api from "@/axios/api";
 import Link from "next/link";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function DashboardPage() {
   const [url, setUrl] = useState("");
-  const { user, loading } = useAuth();
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   // get all videos from server.
@@ -29,7 +25,6 @@ export default function DashboardPage() {
 
       return res.data;
     },
-    enabled: !loading && !!user,
   });
 
   const videosError = videosQueryError
@@ -59,22 +54,6 @@ export default function DashboardPage() {
     },
   });
 
-  // check for user exists in authContext
-  useEffect(() => {
-    if (!loading && !user) {
-      router.replace("/signin");
-    }
-  }, [loading, user, router]);
-
-  // Still checking localStorage
-  if (loading) {
-    return <Loading />;
-  }
-
-  // Not authenticated
-  if (!user) {
-    return null;
-  }
 
   // handle form submit
   const handleSubmit = (e) => {

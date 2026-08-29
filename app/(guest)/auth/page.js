@@ -22,7 +22,6 @@ export default function AuthPage() {
 					"/verify-auth",
 					{ token },
 				);
-				console.log(res.data);
 				
 				setToken(res.data)
 				window.location.replace("/");

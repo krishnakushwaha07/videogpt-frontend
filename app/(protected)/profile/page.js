@@ -1,16 +1,11 @@
 "use client";
 
-import { useAuth } from "@/context/Authcontext";
-import Loading from "../loading";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/axios/api";
+import { useAuth } from "@/context/Authcontext";
 
 export default function ProfilePage() {
-  const router = useRouter();
-
-  const { logoutUser, loading, user } = useAuth();
+  const { logoutUser } = useAuth();
 
   const {
     data: profile,
@@ -22,36 +17,36 @@ export default function ProfilePage() {
       const response = await api.get("/me");
       return response.data;
     },
-    enabled: !loading && !!user,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
+    retry: 1,
   });
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.replace("/signin");
-    }
-  }, [loading, user, router]);
-
-  // Still checking localStorage
-  if (loading) {
-    return <Loading />;
-  }
-
-  // waiting till data comes from server
   if (profileLoading) {
-    return <Loading />;
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12">
+        <section className="h-95 w-full max-w-md animate-pulse rounded-3xl border border-white/10 bg-white/6 p-6 shadow-2xl sm:p-8">
+          <div className="h-24 w-24 rounded-3xl bg-slate-700" />
+          <div className="mt-6 h-7 w-2/3 rounded bg-slate-700" />
+          <div className="mt-3 h-4 w-1/2 rounded bg-slate-800" />
+          <div className="mt-8 h-12 rounded-xl bg-slate-800" />
+        </section>
+      </main>
+    );
   }
 
-  // Not authenticated
-  if (!user || profileError || !profile) {
-    return null;
+  if (profileError || !profile) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 text-white">
+        <p className="text-sm text-red-300">Unable to load your profile.</p>
+      </main>
+    );
   }
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 text-white">
-      <section className="w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/30 backdrop-blur-xl">
-        <div className="h-28 bg-gradient-to-r from-rose-600 via-red-500 to-orange-400" />
+      <section className="w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-white/6 shadow-2xl shadow-black/30 backdrop-blur-xl">
+        <div className="h-28 bg-linear-to-r from-rose-600 via-red-500 to-orange-400" />
 
         <div className="px-6 pb-6 sm:px-8 sm:pb-8">
           <div className="-mt-12 flex items-end justify-between">
@@ -61,6 +56,7 @@ export default function ProfilePage() {
                 alt="profile"
                 width={96}
                 height={96}
+                fetchPriority="high"
                 className="h-full w-full object-cover"
               />
             </div>

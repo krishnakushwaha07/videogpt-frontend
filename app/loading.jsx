@@ -4,7 +4,7 @@ export default function Loading() {
 			<div className="flex flex-col items-center gap-6 text-center">
 				<div className="relative flex h-20 w-20 items-center justify-center">
 					<div className="absolute inset-0 animate-spin rounded-full border-4 border-slate-800 border-t-red-400" />
-					<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-red-400 to-rose-600 shadow-lg shadow-red-500/20">
+					<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-red-400 to-rose-600 shadow-lg shadow-red-500/20">
 						<svg
 							aria-hidden="true"
 							className="h-6 w-6 fill-current text-white"

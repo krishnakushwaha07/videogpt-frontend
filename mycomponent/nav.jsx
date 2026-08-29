@@ -14,14 +14,14 @@ const Navbar = () => {
           href="/"
           className="group flex items-center gap-3 text-xl font-bold tracking-tight text-white"
         >
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-rose-600 text-sm shadow-lg shadow-red-500/30 transition duration-300 group-hover:scale-105 group-hover:shadow-red-500/50">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-red-500 to-rose-600 text-sm shadow-lg shadow-red-500/30 transition duration-300 group-hover:scale-105 group-hover:shadow-red-500/50">
             <span className="translate-x-px">▶</span>
           </span>
           <span>
             video<span className="text-red-400">gpt</span>
           </span>
         </Link>
-        <div className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1 text-sm text-slate-300 md:flex">
+        <div className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/4 p-1 text-sm text-slate-300 md:flex">
           <Link
             href="/dashboard"
             className="rounded-full px-4 py-2 transition hover:bg-white/10 hover:text-white"
@@ -75,7 +75,7 @@ const Navbar = () => {
         </div>
       </div>
       {menuOpen && (
-        <div className="mx-auto mt-3 flex max-w-7xl flex-col gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-2 text-sm text-slate-300 md:hidden">
+        <div className="mx-auto mt-3 flex max-w-7xl flex-col gap-1 rounded-xl border border-white/10 bg-white/4 p-2 text-sm text-slate-300 md:hidden">
           <Link
             href="/dashboard"
             onClick={() => setMenuOpen(false)}

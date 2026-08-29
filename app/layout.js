@@ -19,7 +19,9 @@ const geistMono = Geist_Mono({
 
 const metadata = {
   title: "YT video chat",
-  description: "",
+  description: "Chat about YouTube videos with an AI-powered assistant.",
+  applicationName: "YT video chat",
+  keywords: ["YouTube", "video chat", "AI assistant"],
 };
 
 export default function RootLayout({ children }) {
