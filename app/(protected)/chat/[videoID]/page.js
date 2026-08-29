@@ -2,6 +2,8 @@
 
 import { Suspense, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/axios/api";
 
@@ -55,7 +57,7 @@ export default function ChatPage() {
   };
 
   return (
-    <main className="h-[100dvh] overflow-hidden bg-[radial-gradient(circle_at_top_right,_rgba(127,29,29,0.2),_transparent_35%),#020617] font-sans text-slate-100">
+    <main className="h-dvh overflow-hidden bg-[radial-gradient(circle_at_top_right,_rgba(127,29,29,0.2),_transparent_35%),#020617] font-sans text-slate-100">
       <div className="mx-auto flex h-full w-full max-w-5xl flex-col gap-4 px-3 py-3 pb-24 sm:gap-6 sm:px-5 sm:py-6 sm:pb-28 md:px-8 md:pb-28 lg:px-10">
         <section
           className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900/90 shadow-2xl shadow-black/40 backdrop-blur-xl sm:rounded-3xl"
@@ -105,7 +107,11 @@ export default function ChatPage() {
                     : "max-w-[85%] rounded-2xl rounded-tl-sm border border-red-400/15 bg-white/6 px-4 py-3 text-sm leading-6 text-slate-200 shadow-xl shadow-black/10 sm:max-w-xl"
                 }
               >
-                {item.content}
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                >
+                  {item.content}
+                </ReactMarkdown>
               </div>
             ))}
             <Suspense fallback={null}>
