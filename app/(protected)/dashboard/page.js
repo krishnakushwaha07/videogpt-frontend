@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function DashboardPage() {
   const [url, setUrl] = useState("");
+  const [deletingVideoIds, setDeletingVideoIds] = useState(new Set());
   const queryClient = useQueryClient();
 
   // get all videos from server.
@@ -49,11 +50,22 @@ export default function DashboardPage() {
     mutationFn: async (videoId) => {
       await api.delete(`/video/${videoId}`);
     },
-    onSuccess: () => {
+    onSuccess: (_, videoId) => {
+      setDeletingVideoIds((prev) => {
+        const next = new Set(prev);
+        next.delete(videoId);
+        return next;
+      });
       queryClient.invalidateQueries({ queryKey: ["videos"] });
     },
+    onError: (_, videoId) => {
+      setDeletingVideoIds((prev) => {
+        const next = new Set(prev);
+        next.delete(videoId);
+        return next;
+      });
+    },
   });
-
 
   // handle form submit
   const handleSubmit = (e) => {
@@ -144,7 +156,7 @@ export default function DashboardPage() {
               ) : (
                 <div className="grid gap-4 sm:grid-cols-2">
                   {videos.map((video) => {
-                    const videoUrl = video.video_link;
+                    const thumbnailUrl = `https://img.youtube.com/vi/${video.video_link}/maxresdefault.jpg`;
                     const videoID = `/chat/${video.id}`;
                     const videoTitle = video.title || "Untitled video";
 
@@ -153,37 +165,37 @@ export default function DashboardPage() {
                         key={video.id}
                         className="group overflow-hidden rounded-xl border border-white/8 bg-[#11131a] transition hover:border-red-500/50"
                       >
-                        <Link href={videoID}>
-                          <div className="relative aspect-video overflow-hidden bg-linear-to-br from-red-950 via-slate-800 to-indigo-950">
-                            <div className="absolute -right-8 -top-10 h-32 w-32 rounded-full bg-red-500/20 blur-2xl" />
-                            <div className="absolute -bottom-12 -left-6 h-28 w-40 rotate-12 rounded-full bg-indigo-400/20 blur-xl" />
-                            <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_35%,rgba(255,255,255,0.08)_35%,rgba(255,255,255,0.08)_65%,transparent_65%)]" />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-lg text-red-600 shadow-lg transition group-hover:scale-110">
-                                ▶
-                              </span>
-                            </div>
-                            <span className="absolute bottom-3 left-3 rounded bg-black/60 px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-white/80">
-                              YouTube video
-                            </span>
+                        <Link href={videoID} className="block">
+                          <div className="relative min-h-30 overflow-hidden rounded-t-xl border-b border-white/8 bg-[#0d0f14]">
+                            <img
+                              src={thumbnailUrl}
+                              alt={videoTitle}
+                              className="h-40 w-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src =
+                                  "https://placehold.co/600x340/11131a/94a3b8?text=Video";
+                              }}
+                            />
                           </div>
                         </Link>
                         <div className="p-4">
                           <h3 className="truncate text-sm font-semibold text-slate-100">
                             {videoTitle}
                           </h3>
-                          <p className="mt-1 truncate text-xs text-slate-500">
-                            {videoUrl}
-                          </p>
                           <button
                             type="button"
-                            disabled={deleteVideoMutation.isPending}
+                            disabled={deletingVideoIds.has(video.id)}
                             onClick={() => {
+                              setDeletingVideoIds((prev) => {
+                                const next = new Set(prev);
+                                next.add(video.id);
+                                return next;
+                              });
                               deleteVideoMutation.mutate(video.id);
                             }}
                             className="mt-3 rounded-lg border border-red-500/30 px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/10 disabled:opacity-50"
                           >
-                            {deleteVideoMutation.isPending
+                            {deletingVideoIds.has(video.id)
                               ? "Deleting..."
                               : "Delete"}
                           </button>

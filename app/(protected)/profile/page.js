@@ -22,81 +22,107 @@ export default function ProfilePage() {
     retry: 1,
   });
 
-  if (profileLoading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12">
-        <section className="h-95 w-full max-w-md animate-pulse rounded-3xl border border-white/10 bg-white/6 p-6 shadow-2xl sm:p-8">
-          <div className="h-24 w-24 rounded-3xl bg-slate-700" />
-          <div className="mt-6 h-7 w-2/3 rounded bg-slate-700" />
-          <div className="mt-3 h-4 w-1/2 rounded bg-slate-800" />
-          <div className="mt-8 h-12 rounded-xl bg-slate-800" />
-        </section>
-      </main>
-    );
-  }
-
-  if (profileError || !profile) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 text-white">
-        <p className="text-sm text-red-300">Unable to load your profile.</p>
-      </main>
-    );
-  }
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 text-white">
-      <section className="w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-white/6 shadow-2xl shadow-black/30 backdrop-blur-xl">
-        <div className="h-28 bg-linear-to-r from-rose-600 via-red-500 to-orange-400" />
+    <div className="min-h-screen bg-slate-950 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-5xl items-center justify-center">
+        <div className="w-full max-w-md overflow-hidden rounded-[28px] border border-rose-400/20 bg-slate-900/85 shadow-[0_25px_80px_rgba(244,63,94,0.25)] ring-1 ring-white/5 backdrop-blur-sm sm:max-w-lg">
+          <div className="bg-gradient-to-r from-red-600 via-rose-500 to-orange-400 p-5 sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.35em] text-red-50/80">
+                  VideoGPT
+                </p>
+                <h1 className="mt-2 text-xl font-bold text-white sm:text-2xl">
+                  Profile
+                </h1>
+              </div>
 
-        <div className="px-6 pb-6 sm:px-8 sm:pb-8">
-          <div className="-mt-12 flex items-end justify-between">
-            <div className="flex h-24 w-24 items-center justify-center rounded-3xl border-4 border-slate-950 overflow-hidden shadow-lg">
-              <img
-                src={profile.profile_link}
-                alt="profile"
-                width={96}
-                height={96}
-                fetchPriority="high"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <span className="mb-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300">
-              Active
-            </span>
-          </div>
-
-          <div className="mt-5">
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight">
-              {profile.name}
-            </h1>
-            <p className="mt-2 text-sm text-slate-400">{profile.email}</p>
-          </div>
-
-          <div className="mt-8 border-t border-white/10 pt-6">
-            <button
-              type="button"
-              onClick={logoutUser}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm font-semibold text-red-300 transition hover:border-red-400/40 hover:bg-red-400/20 focus:outline-none focus:ring-2 focus:ring-red-400/50"
-            >
-              <svg
-                aria-hidden="true"
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20 hover:shadow-lg hover:shadow-red-500/20 sm:px-4 sm:text-sm"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 12h9m0 0-3-3m3 3-3 3"
-                />
-              </svg>
-              Log out
-            </button>
+                Logout
+              </button>
+            </div>
+          </div>
+
+          <div className="p-5 sm:p-6">
+            {profileLoading ? (
+              <div className="space-y-5">
+                <div className="flex items-center gap-4">
+                  <div className="h-16 w-16 animate-pulse rounded-full bg-slate-700 sm:h-20 sm:w-20" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3 w-24 animate-pulse rounded bg-slate-700 sm:h-4" />
+                    <div className="h-5 w-32 animate-pulse rounded bg-slate-700 sm:h-6" />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="h-20 animate-pulse rounded-2xl bg-slate-800" />
+                  <div className="h-20 animate-pulse rounded-2xl bg-slate-800" />
+                 
+                </div>
+              </div>
+            ) : profileError ? (
+              <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
+                Unable to load your profile right now. Please try again.
+              </div>
+            ) : profile ? (
+              <div className="space-y-5">
+                <div className="flex items-center gap-4">
+                  <div className="relative h-16 w-16 overflow-hidden rounded-full border border-rose-300/30 bg-gradient-to-br from-red-400 via-rose-400 to-orange-400 shadow-lg shadow-red-500/25 sm:h-20 sm:w-20">
+                  <img
+                    src={profile.profile_link}
+                    alt={profile?.name || "User profile"}
+                    className="h-full w-full object-cover"
+                  />
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400">
+                      Welcome back
+                    </p>
+                    <h2 className="mt-1 truncate text-lg font-semibold text-white sm:text-xl">
+                      {profile?.name || "User"}
+                    </h2>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="rounded-2xl border border-slate-800 bg-slate-800/60 p-4">
+                    <p className="text-[9px] font-medium uppercase tracking-[0.24em] text-slate-400">
+                      Full Name
+                    </p>
+                    <p className="mt-2 break-words text-sm font-medium text-white sm:text-base">
+                      {profile?.name || "Not available"}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-800 bg-slate-800/60 p-4">
+                    <p className="text-[9px] font-medium uppercase tracking-[0.24em] text-slate-400">
+                      Email
+                    </p>
+                    <p className="mt-2 break-all text-sm font-medium text-white sm:text-base">
+                      {profile?.email || "Not available"}
+                    </p>
+                  </div>
+
+                 
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
-      </section>
-    </main>
+      </div>
+    </div>
   );
 }
